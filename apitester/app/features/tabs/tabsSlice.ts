@@ -35,10 +35,15 @@ export const tabsSlice = createSlice({
     removeTab: (state, action: PayloadAction<string>) => {
         state.value = state.value.filter((tab : tabState) => tab.tabid !== action.payload)
     },
+    changeUrl : (state , action: PayloadAction<{ tabid: string; url: string }>) => {
+      const { tabid , url} = action.payload
+      state.value = state.value.map((tab: tabState) => tab.tabid === tabid ? { ...tab, url } : tab  )
+       
+    }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { addTab , removeTab} = tabsSlice.actions
+export const { addTab , removeTab , changeUrl} = tabsSlice.actions
 
 export default tabsSlice.reducer
