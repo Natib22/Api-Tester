@@ -1,4 +1,4 @@
-
+"use client"
 import React from 'react'
 
 import Tabs from './Components/Tabs'
@@ -7,6 +7,7 @@ import Panel from './Components/Panel'
 
 const Homepage
  = () => {
+  const [currTabId, setCurrTabId] = React.useState("0")
   return (
     <div className='h-full w-full flex '>
       <div className='h-screen sticky top-0 w-14 max-tablet:w-[12%]'>
@@ -16,10 +17,10 @@ const Homepage
       
 
       </div>
-      <div className=' max-tablet:w-[80%] tablet:w-[90%] flex-grow   h-full pr-4 flex flex-col '>
-        < Tabs />
-        < Urlsearchbar currTabId  = {1} />
-        < Panel />
+      <div className=' max-tablet:w-[80%] tablet:w-[90%] flex-grow  pr-4 flex flex-col '>
+        < Tabs setCurrTabId = {setCurrTabId} />
+        < Urlsearchbar currTabId  = {currTabId} />
+        < Panel tabId={currTabId} />
       </div>
      
      
