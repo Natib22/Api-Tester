@@ -23,9 +23,9 @@ html {
 body {
   background-color: #1B1818;
   height: auto;
-  min-height: 100vh; /* Ensure body covers at least the height of the viewport */
-  width: 100%; /* Fix: Set width to 100% */
-  margin: 0; /* Remove default margin */
+  min-height: 100vh; 
+  width: 100%; 
+  margin: 0;
 }
 
 
