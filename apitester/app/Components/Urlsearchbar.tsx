@@ -1,5 +1,5 @@
 "use client"
-import React from "react";
+import React, { useEffect } from "react";
 
 import { RootState } from '../store'
 import { useDispatch, useSelector } from "react-redux";
@@ -14,7 +14,11 @@ interface UrlsearchbarProps {
 const Urlsearchbar: React.FC<UrlsearchbarProps> = ({ currTabId })=> {
   const tabs = useSelector((state : RootState) => state.tabs.value)
   // Assuming currTabId is defined and tabs is an array of tab objects
-const currTab = tabs.find(tab => tab.tabid === String(currTabId));
+  let  currTab = tabs.find(tab => tab.tabid === String(currTabId));
+
+  useEffect(() => {
+    currTab = tabs.find(tab => tab.tabid === String(currTabId));
+  }, [tabs, currTabId])
 
   const dispatch = useDispatch()
    

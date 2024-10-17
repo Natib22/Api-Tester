@@ -10,27 +10,34 @@ import { changeParams } from '../features/tabs/tabsSlice'
 const RequestPanel = ({tabId} :{tabId: string}) => {
   const [activeTab, setActiveTab] = useState('Params')
   const dispatch = useDispatch()
-  const [index, setIndex] = useState(3)
+ 
   useEffect(() => {
     // Dispatch once when component mounts or when specific dependencies change
-    dispatch(changeParams({ tabid: tabId, params: ["my", "21"], index: index }));
-  }, [dispatch , index]);
+    dispatch(changeParams({ tabid: tabId, params: ["my", "21"], index: 0 }));
+  }, [tabId , dispatch]);
+  
 
   
  
- const params = useSelector((state: RootState) => state.tabs.value[Number(tabId)].params)
- console.log(params)
+ const params = useSelector((state: RootState) => state.tabs.value[Number(tabId)].params || [["", ""]]) 
+
+ useEffect(() => {
+
+  console.log(params)
+
+
+ },[params])
 
 
      
 
   return (
     <div className='w-full mb-2 min-h-[300px] pc:h-full bg-lightgrey flex flex-col rounded-lg'>
-      <div className='border-b-[0.5px] border-b-slate-600 border-opacity-40 h-12 flex gap-3'>
-        <button aria-selected={activeTab == "Params"} role="tab" id= "Params" onClick={() => setActiveTab("Params")}> Params</button>
-        <button aria-selected={activeTab == "Headers"} role="tab" id="Headers" onClick={() => setActiveTab("Headers")}>Headers</button>
-        <button aria-selected={activeTab == "Body"} role="tab" id="Body" onClick={() => setActiveTab("Body")}>Body</button>
-        <button aria-selected={activeTab == "Auth"} role="tab" id = "Auth" onClick={() => setActiveTab("Auth")}>Auth</button>
+      <div className='border-b-[0.5px] border-b-slate-600 border-opacity-40 h-12 flex items-center gap-3 px-7'>
+        <button className= "btn btn-sm h-[80%] bg-transparent w-20" aria-selected={activeTab == "Params"} role="tab" id= "Params" onClick={() => setActiveTab("Params")}> Params</button>
+        <button  className="btn btn-sm h-[80%] bg-transparent w-20" aria-selected={activeTab == "Headers"} role="tab" id="Headers" onClick={() => setActiveTab("Headers")}>Headers</button>
+        <button className="btn btn-sm h-[80%] bg-transparent w-20" aria-selected={activeTab == "Body"} role="tab" id="Body" onClick={() => setActiveTab("Body")}>Body</button>
+        <button className="btn btn-sm h-[80%] bg-transparent w-20" aria-selected={activeTab == "Auth"} role="tab" id = "Auth" onClick={() => setActiveTab("Auth")}>Auth</button>
       </div>
       
 
@@ -43,43 +50,39 @@ const RequestPanel = ({tabId} :{tabId: string}) => {
           className=""
         >
           {params.map((param, index) => (
-            <div className='flex px-4 mx-5  border-opacity-50  border-b-gray-600 border-b-[0.05px] h-12  hover:bg-[#2d2b2b]' >  
+            <div key = {index} className='flex items-center px-4 mx-5  border-opacity-50  border-b-gray-600 border-b-[0.05px] h-12  hover:bg-[#2d2b2b]' >  
             <input
                   type="checkbox"
                   
-                  className="mr-2 outline-none border-none"
+                  className="mr-2 appearance-none w-4 h-4 border-[1px] border-gray-500 rounded-md checked:bg-green-400 checked:border-transparent focus:ring-2 focus:ring-neutral-content outline-none transition duration-300 ease-in-out relative checked:before:content-['✔'] checked:before:text-white checked:before:text-xs checked:before:absolute checked:font-black  checked:before:left-[1px] checked:before:top-0"
+    
                   id="toggle-checkbox"
                 />
 
             <input 
             id= {`tab1-input-${index}`}
             name= {`${tabId}-${index}`}
-            value={params[index][0]}
+            value={param[0]}
             key={index}
-            onChange={(e) => dispatch(changeParams({ tabid: tabId, params: [e.target.value, params[index][1]], index: index }))}
-            className='w-2/5 outline-none bg-transparent'
+            onChange={(e) => dispatch(changeParams({ tabid: tabId, params: [e.target.value, param[1]], index: index }))}
+            className='w-2/5 outline-none bg-transparent placeholder:font-light placeholder:text-sm  placeholder:opacity-40'
             placeholder='name'
             
           />
           <input 
             id= {`tab1-input-${index}`}
             name= {`${tabId}-${index}`}
-            value={params[index][1]}
-            key={index}
-            onChange={(e) => dispatch(changeParams({ tabid: tabId, params: [params[index][0], e.target.value], index: index }))}
-            className='w-2/5 flex-grow outline-none bg-transparent'
+            value={param[1]}
+            key={-index - 1}
+            onChange={(e) => dispatch(changeParams({ tabid: tabId, params: [param[0], e.target.value], index: index }))}
+            className='w-2/5 flex-grow outline-none bg-transparent  placeholder:opacity-40 placeholder:text-sm placeholder:font-light'
             placeholder='value'
           />
            </div>
            
           ))}
           
-          {/* <input
-            id="tab1-input"
-            type="text"
-            value={tab1Input}
-            onChange={(e) => setTab1Input(e.target.value)}
-          /> */}
+          
         </div>
         
       </div>

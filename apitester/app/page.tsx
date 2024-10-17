@@ -18,7 +18,7 @@ const Homepage
 
       </div>
       <div className=' max-tablet:w-[80%] tablet:w-[90%] flex-grow  pr-4 flex flex-col '>
-        < Tabs setCurrTabId = {setCurrTabId} />
+        < Tabs setCurrTabId = { setCurrTabId}  currTabId = {currTabId}/>
         < Urlsearchbar currTabId  = {currTabId} />
         < Panel tabId={currTabId} />
       </div>

@@ -6,17 +6,22 @@ import { addTab, removeTab } from '../features/tabs/tabsSlice'
 
 interface TabsProps {
   setCurrTabId: (tabId: string) => void;
+  currTabId : string
   // Function that takes a string and returns void
 }
 
-const Tabs = ({setCurrTabId} : TabsProps) => {
+const Tabs = ({setCurrTabId , currTabId} : TabsProps) => {
+
   const dispatch = useDispatch()
   const tabs = useSelector((state: RootState) => state.tabs.value)
   const handleAddTab = () => {
     dispatch(addTab())
   }
-  const handleRemoveTab = (tabid: string) => { 
+  const handleRemoveTab = (tabid: string , e: React.MouseEvent<HTMLSpanElement>) => { 
+    e.stopPropagation()
     dispatch(removeTab(tabid))
+    setCurrTabId("0")
+
   }
   const handleChangeTab = (tabid: string) => {
       setCurrTabId(tabid)
@@ -25,8 +30,8 @@ const Tabs = ({setCurrTabId} : TabsProps) => {
     <div className=' h-9 w-auto my-2  flex items-center overflow-x-auto '>
       <div className='  h-full overflow-scroll flex items-center gap-2'>
       {tabs.map((tab, index) => (
-        <div onClick={() => handleChangeTab(tab.tabid)} key = {index} className='flex h-full   w-auto max-w-52 p-1  items-center bg-[#2d2b2b] rounded-lg'> <span className='text-[8px] ml-1'>{tab.method}</span> <span className='text-xs m-1 overflow-hidden
-        '>{tab.title}{tab.tabid}</span> <span  onClick = {() => handleRemoveTab(tab.tabid)} className=''><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="m291-240-51-51 189-189-189-189 51-51 189 189 189-189 51 51-189 189 189 189-51 51-189-189-189 189Z"/></svg></span></div>
+        <div onClick={() => handleChangeTab(tab.tabid)} key = {index} className= {`flex h-full   w-auto max-w-52 p-1  items-center ${currTabId == tab.tabid ? "bg-slate-600" : "bg-[#2d2b2b] "} rounded-lg`}> <span className='text-[8px] ml-1'>{tab.method}</span> <span className='text-xs m-1 overflow-hidden
+        '>{tab.title}{tab.tabid}</span> <span  onClick = {(e) => handleRemoveTab(tab.tabid ,e)} className=''><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="m291-240-51-51 189-189-189-189 51-51 189 189 189-189 51 51-189 189 189 189-51 51-189-189-189 189Z"/></svg></span></div>
         
 
       ))}
