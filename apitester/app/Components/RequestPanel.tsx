@@ -11,10 +11,10 @@ const RequestPanel = ({tabId} :{tabId: string}) => {
   const [activeTab, setActiveTab] = useState('Params')
   const dispatch = useDispatch()
  
-  useEffect(() => {
-    // Dispatch once when component mounts or when specific dependencies change
-    dispatch(changeParams({ tabid: tabId, params: ["my", "21"], index: 0 }));
-  }, [tabId , dispatch]);
+  // useEffect(() => {
+  //   // Dispatch once when component mounts or when specific dependencies change
+  //   dispatch(changeParams({ tabid: tabId, params: ["my", "21"], index: 0 }));
+  // }, [tabId , dispatch]);
   
 
   

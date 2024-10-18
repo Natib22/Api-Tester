@@ -18,7 +18,7 @@ export interface TabsState {
 }
 
 const initialState: TabsState = {
-    value: [{tabid: "0", title: "untitled", url: "https://love.com"  , method: "GET" , params: [] , headers :[]}],
+    value: [{tabid: "0", title: "untitled", url: "https://love.com"  , method: "GET" , params: [["" , ""]] , headers :[["",""]]}],
     currentTabId: "0"
 }
 
