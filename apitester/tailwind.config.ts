@@ -26,7 +26,7 @@ const config: Config = {
     
   ],
   daisyui: {
-    themes: ['dark' ,  'retro', 'cyberpunk', 'valentine', 'aqua'], // Add your themes here
+    themes: ['dark' ,  'retro', 'cyberpunk', 'valentine', 'aqua'], // Add your theme
   },
 };
 export default config;
