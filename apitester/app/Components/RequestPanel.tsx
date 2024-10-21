@@ -7,20 +7,18 @@ import { changeParams , changeHeaders } from '../features/tabs/tabsSlice'
 
 
 
-const RequestPanel = ({tabId} :{tabId: string}) => {
+const RequestPanel = () => {
+  const tabId = useSelector((state: RootState) => state.tabs.currTabId)
   const [activeTab, setActiveTab] = useState('Params')
   const dispatch = useDispatch()
  
-  // useEffect(() => {
-  //   // Dispatch once when component mounts or when specific dependencies change
-  //   dispatch(changeParams({ tabid: tabId, params: ["my", "21"], index: 0 }));
-  // }, [tabId , dispatch]);
-  
-
-  
  
- const params = useSelector((state: RootState) => state.tabs.value[Number(tabId)].params || [["", ""]])
- const headers = useSelector((state:RootState) => state.tabs.value[Number(tabId)].headers || [["", ""]]) 
+ const params = useSelector((state: RootState) => state.tabs.value[tabId].params || [["", ""]])
+ const headers = useSelector((state:RootState) => state.tabs.value[tabId].headers || [["", ""]]) 
+
+ useEffect (() => {
+
+ })
 
 
  useEffect(() => {
