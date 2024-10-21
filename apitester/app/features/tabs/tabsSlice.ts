@@ -2,24 +2,32 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 export interface tabState {
-    tabid : string,
-  title : string,
-    url : string,
-    method : string,
-    params : [ string, string][], 
-    headers : [ string, string][],
-
+  tabid: string;
+  title: string;
+  url: string;
+  method: string;
+  params: [string, string][];
+  headers: [string, string][];
 }
 
 export interface TabsState {
-    value: tabState[]
-    currentTabId: string
-    
+  value: {
+    [tabid: string]: tabState; // Hash map where tabid is the key
+  };
+  nextTabId: string;
+  currTabId: string;
 }
 
+
 const initialState: TabsState = {
-    value: [{tabid: "0", title: "untitled", url: "https://love.com"  , method: "GET" , params: [["" , ""]] , headers :[["",""]]}],
-    currentTabId: "0"
+    value:{
+       "0" : {tabid: "0", title: "untitled", url: ""  , method: "GET" , params: [["" , ""]] , headers :[["",""]]},
+
+    },
+
+     
+    nextTabId: "0",
+    currTabId: "0",
 }
 
 export const tabsSlice = createSlice({
@@ -27,27 +35,49 @@ export const tabsSlice = createSlice({
   initialState,
   reducers: {
     addTab : (state) => {
-         const tabid: number = Number(state.currentTabId) + 1
+         const tabid: number = Number(state.nextTabId) + 1
 
-        state.value.push({tabid: String(tabid), title: "untitled", url: "https://love.com", method: "GET" , params: [["", ""]] , headers :[["", ""]]})
-        state.currentTabId = String(tabid)
+        state.value[String(tabid)] = {tabid: String(tabid), title: "untitled", url: "https://love.com", method: "GET" , params: [["", ""]] , headers :[["", ""]]}
+        state.nextTabId = String(tabid)
 
     },
 
    
     removeTab: (state, action: PayloadAction<string>) => {
-        state.value = state.value.filter((tab : tabState) => tab.tabid !== action.payload)
+        
+        if (Object.keys(state.value).length > 1){
+          delete state.value[action.payload]
+
+        }
+        else {
+          state.value = {["0"] : {tabid: "0", title: "untitled", url: "", method: "GET" , params: [["", ""]] , headers :[["", ""]]}}
+        }
+        if (action.payload === state.currTabId) {
+          state.currTabId = Object.keys(state.value)[0]
+          console.log(state.currTabId , "checking if the probkem is here" , Object.keys(state.value))
+        }
+
+        // need to handle the order or convert it to hashmap
+        
+        
+    },
+    changeActiveTabs : (state , action: PayloadAction<{ tabid: string }>) => {
+      const { tabid } = action.payload
+      state.currTabId = tabid
+
     },
 
     changeUrl : (state , action: PayloadAction<{ tabid: string; url: string }>) => {
       const { tabid , url} = action.payload
-      state.value = state.value.map((tab: tabState) => tab.tabid === tabid ? { ...tab, url } : tab  )
+      // state.value = state.value.map((tab: tabState) => tab.tabid === tabid ? { ...tab, url } : tab  )
+      state.value[tabid].url = url
        
     },
 
     changeMethod : (state , action: PayloadAction<{ tabid: string; method: string }>) => {
       const { tabid , method} = action.payload
-      state.value = state.value.map((tab: tabState) => tab.tabid === tabid ? { ...tab, method } : tab  )
+      // state.value = state.value.map((tab: tabState) => tab.tabid === tabid ? { ...tab, method } : tab  )
+      state.value[tabid].method = method
 
 
     },
@@ -55,7 +85,7 @@ export const tabsSlice = createSlice({
 
     changeParams : (state , action: PayloadAction<{ tabid: string; params: [string, string]; index: number }>) => {
       const { tabid , params, index} = action.payload
-      const tab = state.value.find((tab) => tab.tabid === tabid);
+      const tab = state.value[tabid];
   if (!tab) return; // If tab is not found, exit early
 
   // Handling params deletion
@@ -92,7 +122,7 @@ export const tabsSlice = createSlice({
     changeHeaders : (state , action: PayloadAction<{ tabid: string; headers: [string, string]; index: number }>) => {
 
       const { tabid , headers, index} = action.payload
-        const tab = state.value.find((tab) => tab.tabid === tabid);
+        const tab = state.value[tabid];
     if (!tab) return; // If tab is not found, exit early
   
     // Handling headers deletion
@@ -128,6 +158,6 @@ export const tabsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { addTab , removeTab , changeUrl , changeMethod , changeParams , changeHeaders} = tabsSlice.actions
+export const { addTab , removeTab , changeUrl , changeMethod , changeParams , changeHeaders , changeActiveTabs} = tabsSlice.actions
 
 export default tabsSlice.reducer

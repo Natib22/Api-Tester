@@ -5,9 +5,12 @@ import Tabs from './Components/Tabs'
 import Urlsearchbar from './Components/Urlsearchbar'
 import Panel from './Components/Panel'
 
+
 const Homepage
  = () => {
-  const [currTabId, setCurrTabId] = React.useState("0")
+  
+  
+  
   return (
     <div className='h-full w-full flex '>
       <div className='h-screen sticky top-0 w-14 max-tablet:w-[12%]'>
@@ -18,9 +21,9 @@ const Homepage
 
       </div>
       <div className=' max-tablet:w-[80%] tablet:w-[90%] flex-grow  pr-4 flex flex-col '>
-        < Tabs setCurrTabId = { setCurrTabId}  currTabId = {currTabId}/>
-        < Urlsearchbar currTabId  = {currTabId} />
-        < Panel tabId={currTabId} />
+        < Tabs />
+        < Urlsearchbar  />
+        < Panel  />
       </div>
      
      

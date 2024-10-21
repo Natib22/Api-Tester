@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from "react";
+import React from "react";
 
 import { RootState } from '../store'
 import { useDispatch, useSelector } from "react-redux";
@@ -7,18 +7,15 @@ import { changeUrl , changeMethod } from "../features/tabs/tabsSlice";
 
 
 
-interface UrlsearchbarProps {
-  currTabId: string;
-}
 
-const Urlsearchbar: React.FC<UrlsearchbarProps> = ({ currTabId })=> {
+
+const Urlsearchbar = ()=> {
+  const currTabId = useSelector( (state : RootState) => state.tabs.currTabId)
   const tabs = useSelector((state : RootState) => state.tabs.value)
   // Assuming currTabId is defined and tabs is an array of tab objects
-  let  currTab = tabs.find(tab => tab.tabid === String(currTabId));
+  const  currTab = tabs[currTabId];
 
-  useEffect(() => {
-    currTab = tabs.find(tab => tab.tabid === String(currTabId));
-  }, [tabs, currTabId])
+ 
 
   const dispatch = useDispatch()
    
