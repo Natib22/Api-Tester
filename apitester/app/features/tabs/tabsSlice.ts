@@ -8,6 +8,9 @@ export interface tabState {
   method: string;
   params: [string, string][];
   headers: [string, string][];
+  sentStatus: boolean;
+  response: (Array<object> | object)[]
+
 }
 
 export interface TabsState {
@@ -21,7 +24,7 @@ export interface TabsState {
 
 const initialState: TabsState = {
     value:{
-       "0" : {tabid: "0", title: "untitled", url: ""  , method: "GET" , params: [["" , ""]] , headers :[["",""]]},
+       "0" : {tabid: "0", title: "untitled", url: ""  , method: "GET" , params: [["" , ""]] , headers :[["",""]] , sentStatus: false , response: []},
 
     },
 
@@ -37,7 +40,7 @@ export const tabsSlice = createSlice({
     addTab : (state) => {
          const tabid: number = Number(state.nextTabId) + 1
 
-        state.value[String(tabid)] = {tabid: String(tabid), title: "untitled", url: "https://love.com", method: "GET" , params: [["", ""]] , headers :[["", ""]]}
+        state.value[String(tabid)] = {tabid: String(tabid), title: "untitled", url: "", method: "GET" , params: [["", ""]] , headers :[["", ""]] , sentStatus: false , response: []}  
         state.nextTabId = String(tabid)
 
     },
@@ -50,7 +53,7 @@ export const tabsSlice = createSlice({
 
         }
         else {
-          state.value = {["0"] : {tabid: "0", title: "untitled", url: "", method: "GET" , params: [["", ""]] , headers :[["", ""]]}}
+          state.value = {["0"] : {tabid: "0", title: "untitled", url: "", method: "GET" , params: [["", ""]] , headers :[["", ""]] , sentStatus: false , response: []}}
         }
         if (action.payload === state.currTabId) {
           state.currTabId = Object.keys(state.value)[0]
@@ -153,11 +156,31 @@ export const tabsSlice = createSlice({
     }
     
   },
+
+  changeResponse : (state , action: PayloadAction<{ tabid: string; response: (Array<object> | object)[]
+  }>) => {
+    const { tabid , response} = action.payload
+    if (state.value[tabid].response.length > 0){
+      state.value[tabid].response[0] = response
+    }
+    else{
+      state.value[tabid].response.push(response)
+
+    }
+
+    
   
   },
+
+  changeResponseStatus : (state , action: PayloadAction<{ tabid: string , status: boolean }>) =>  {
+    const { tabid  , status} = action.payload
+    state.value[tabid].sentStatus =  status
+
+  },
+}
 })
 
 // Action creators are generated for each case reducer function
-export const { addTab , removeTab , changeUrl , changeMethod , changeParams , changeHeaders , changeActiveTabs} = tabsSlice.actions
+export const { addTab , removeTab , changeUrl , changeMethod , changeParams , changeHeaders , changeActiveTabs , changeResponse , changeResponseStatus} = tabsSlice.actions
 
 export default tabsSlice.reducer
