@@ -15,9 +15,15 @@ export const apiSlice = createApi({
       }),
       // Use transformResponse to include headers in the response
       transformResponse: (response : (Array<object> | object)[]  , meta) => {
+        console.log(meta)
         return {
           data: response, // The actual response data
-          headers: meta?.response?.headers, // Headers from the response
+          headers: meta?.response?.headers,
+          
+          response: meta?.response,
+          request: meta?.request,
+
+           // Headers from the response
         };
       },
     }),

@@ -32,7 +32,7 @@ const RequestPanel = () => {
      
 
   return (
-    <div className='w-full mb-2 min-h-[300px] pc:h-full bg-lightgrey flex flex-col pc:rounded-tl-lg pc:border-r-[0.5px] pc:border-opacity-40 pc:rounded-bl-lg pc:border-r-slate-600 max-pc:rounded-lg'>
+    <div className='max-pc:w-full pc:w-40%  mb-2 min-h-[300px] pc:h-full bg-lightgrey flex flex-col pc:rounded-tl-lg pc:border-r-[0.5px] pc:border-opacity-40 pc:rounded-bl-lg pc:border-r-slate-600 max-pc:rounded-lg'>
       <div className='border-b-[0.5px] border-b-slate-600 border-opacity-40 h-12 flex items-center gap-3 px-7'>
         <button className= {`btn btn-sm border-none h-[80%] ${activeTab == "Params" ? "bg-[#323030]" :"bg-transparent" }  w-20`} aria-selected={activeTab == "Params"} role="tab" id= "Params" onClick={() => setActiveTab("Params")}> Params</button>
         <button  className={`btn btn-sm border-none h-[80%] ${activeTab == "Headers" ? "bg-[#323030]" :"bg-transparent" }  w-20`} aria-selected={activeTab == "Headers"} role="tab" id="Headers" onClick={() => setActiveTab("Headers")}>Headers</button>

@@ -10,6 +10,10 @@ export interface tabState {
   headers: [string, string][];
   sentStatus: boolean;
   response: (Array<object> | object)[]
+  responseHeaders : object
+  responseMetaData : object
+  requestMetaData : object
+
 
 }
 
@@ -24,7 +28,7 @@ export interface TabsState {
 
 const initialState: TabsState = {
     value:{
-       "0" : {tabid: "0", title: "untitled", url: ""  , method: "GET" , params: [["" , ""]] , headers :[["",""]] , sentStatus: false , response: []},
+       "0" : {tabid: "0", title: "untitled", url: ""  , method: "GET" , params: [["" , ""]] , headers :[["",""]] , sentStatus: false , response: [] , responseHeaders: {}  , responseMetaData :{} , requestMetaData : {}},
 
     },
 
@@ -40,7 +44,7 @@ export const tabsSlice = createSlice({
     addTab : (state) => {
          const tabid: number = Number(state.nextTabId) + 1
 
-        state.value[String(tabid)] = {tabid: String(tabid), title: "untitled", url: "", method: "GET" , params: [["", ""]] , headers :[["", ""]] , sentStatus: false , response: []}  
+        state.value[String(tabid)] = {tabid: String(tabid), title: "untitled", url: "", method: "GET" , params: [["", ""]] , headers :[["", ""]] , sentStatus: false , response: [] , responseHeaders: {} , responseMetaData :{} , requestMetaData : {}}  
         state.nextTabId = String(tabid)
 
     },
@@ -53,7 +57,7 @@ export const tabsSlice = createSlice({
 
         }
         else {
-          state.value = {["0"] : {tabid: "0", title: "untitled", url: "", method: "GET" , params: [["", ""]] , headers :[["", ""]] , sentStatus: false , response: []}}
+          state.value = {["0"] : {tabid: "0", title: "untitled", url: "", method: "GET" , params: [["", ""]] , headers :[["", ""]] , sentStatus: false , response: [] , responseHeaders:{} ,responseMetaData :{} , requestMetaData : {}}}
         }
         if (action.payload === state.currTabId) {
           state.currTabId = Object.keys(state.value)[0]
@@ -160,13 +164,15 @@ export const tabsSlice = createSlice({
   changeResponse : (state , action: PayloadAction<{ tabid: string; response: (Array<object> | object)[]
   }>) => {
     const { tabid , response} = action.payload
-    if (state.value[tabid].response.length > 0){
-      state.value[tabid].response[0] = response
+    if (Array.isArray(response)) {
+      state.value[tabid].response = response
     }
     else{
       state.value[tabid].response.push(response)
 
     }
+   
+    
 
     
   
@@ -177,10 +183,24 @@ export const tabsSlice = createSlice({
     state.value[tabid].sentStatus =  status
 
   },
+
+   changeResponseHeaders : (state , action: PayloadAction<{ tabid: string , headers : object }>) => {
+    const { tabid , headers}  = action.payload
+    state.value[tabid].responseHeaders = headers
+   },
+
+   changeMetaData : (state , action: PayloadAction<{ tabid: string , response : object , request : object }>) => {
+    const { tabid , request , response}  = action.payload
+    state.value[tabid].requestMetaData = request
+    state.value[tabid].responseMetaData = response
+    
+   },
+
+
 }
 })
 
 // Action creators are generated for each case reducer function
-export const { addTab , removeTab , changeUrl , changeMethod , changeParams , changeHeaders , changeActiveTabs , changeResponse , changeResponseStatus} = tabsSlice.actions
+export const { addTab , removeTab , changeUrl , changeMethod , changeParams , changeHeaders , changeActiveTabs , changeResponse , changeResponseStatus , changeResponseHeaders , changeMetaData} = tabsSlice.actions
 
 export default tabsSlice.reducer

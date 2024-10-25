@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 
 import { RootState } from '../store'
 import { useDispatch, useSelector } from "react-redux";
-import { changeUrl , changeMethod , changeResponse , changeResponseStatus } from "../features/tabs/tabsSlice";
+import { changeUrl , changeMethod , changeResponse , changeResponseStatus , changeResponseHeaders , changeMetaData } from "../features/tabs/tabsSlice";
 import { useLazyFetchDataFromUrlQuery } from "../features/apis/apisSlice";
 
 
@@ -57,8 +57,14 @@ const headers = currTab.headers
 
   useEffect(() => {
     if (data) {
+      
       dispatch(changeResponse({tabid: currTabId , response: data.data}))  
       dispatch(changeResponseStatus({tabid: String(currTabId) , status: true}))
+      dispatch(changeResponseHeaders({tabid : currTabId , headers: data.headers || {}}))
+      // const temp: Record<string, unknown> = data.metadata || {};
+      // temp["response"] = data.response;
+      // temp["request"] = data.request;
+      dispatch(changeMetaData({tabid: String(currTabId) , request: data.request|| {} , response : data.response || {}}))
   
       
 
