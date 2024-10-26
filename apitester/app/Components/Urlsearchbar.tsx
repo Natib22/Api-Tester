@@ -3,11 +3,11 @@ import React, { useEffect } from "react";
 
 import { RootState } from '../store'
 import { useDispatch, useSelector } from "react-redux";
-import { changeUrl , changeMethod , changeResponse , changeResponseStatus , changeResponseHeaders , changeMetaData } from "../features/tabs/tabsSlice";
+import { changeUrl , changeMethod , changeResponse , changeResponseStatus , changeResponseHeaders , changeMetaData , changeError  , changeLoadingStatus} from "../features/tabs/tabsSlice";
 import { useLazyFetchDataFromUrlQuery } from "../features/apis/apisSlice";
 
 
-
+ 
 
 
 const Urlsearchbar = ()=> {
@@ -64,14 +64,23 @@ const headers = currTab.headers
       // const temp: Record<string, unknown> = data.metadata || {};
       // temp["response"] = data.response;
       // temp["request"] = data.request;
+      
       dispatch(changeMetaData({tabid: String(currTabId) , request: data.request|| {} , response : data.response || {}}))
-  
+      
       
 
     }
+    if (error) {
+      dispatch(changeError({tabid: String(currTabId) , error: error}))
+     
+      
+    }
+    if (isLoading) {
+      dispatch(changeLoadingStatus({tabid: String(currTabId) , status: false}))
+    }
       
       
-  } , [data ,  dispatch])
+  } , [data ,error ,isLoading ,   dispatch])
   
     
  
