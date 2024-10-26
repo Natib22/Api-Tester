@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction, SerializedError } from '@reduxjs/toolkit'
-import { ResponseMetadata } from './tabsInterface';
+import { ResponseMetadata , RequestMetaData } from './tabsInterface';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 
@@ -16,7 +16,7 @@ export interface tabState {
   response: (Array<object> | object)[]
   responseHeaders : object
   responseMetaData : ResponseMetadata
-  requestMetaData : object
+  requestMetaData : RequestMetaData
   error : FetchBaseQueryError | SerializedError | undefined
   isLoading : boolean
 
@@ -42,11 +42,28 @@ const responseMetaData : ResponseMetadata = {
         body: new ReadableStream(), // Create a new ReadableStream object
         bodyUsed: false,
       }
+  
+const requestMetaDataClone: RequestMetaData = {
+        method: "",
+        url: "",
+        headers: new Headers(), // or populate with specific headers
+        destination: "",
+        referrer: "",
+        referrerPolicy: "",
+        mode: "cors",
+        credentials: "same-origin",
+        cache: "default",
+        redirect: "follow",
+        integrity: "",
+        signal: new AbortController().signal, // you may need to replace this with a real signal depending on use
+        bodyUsed: false,
+      };
+      
 
 
 const initialState: TabsState = {
     value:{
-       "0" : {tabid: "0", title: "untitled", url: ""  , method: "GET" , params: [["" , ""]] , headers :[["",""]] , sentStatus: false , response: [] , responseHeaders: {}  , responseMetaData : responseMetaData , requestMetaData : {} , error : undefined , isLoading : false},
+       "0" : {tabid: "0", title: "untitled", url: ""  , method: "GET" , params: [["" , ""]] , headers :[["",""]] , sentStatus: false , response: [] , responseHeaders: {}  , responseMetaData : responseMetaData , requestMetaData : requestMetaDataClone , error : undefined , isLoading : false},
 
     },
 
@@ -62,18 +79,8 @@ export const tabsSlice = createSlice({
     addTab : (state) => {
          const tabid: number = Number(state.nextTabId) + 1
 
-        state.value[String(tabid)] = {tabid: String(tabid), title: "untitled", url: "", method: "GET" , params: [["", ""]] , headers :[["", ""]] , sentStatus: false , response: [] , responseHeaders: {} , responseMetaData : {
-          type: "",
-          url: "",
-          redirected: false,
-          status: 0,
-          ok: false,
-          statusText: "",
-          headers: new Headers(), // Create a new Headers object
-          body: new ReadableStream(), // Create a new ReadableStream object
-          bodyUsed: false,
-        }
-   , requestMetaData : {} , error:undefined , isLoading: false}  
+        state.value[String(tabid)] = {tabid: String(tabid), title: "untitled", url: "", method: "GET" , params: [["", ""]] , headers :[["", ""]] , sentStatus: false , response: [] , responseHeaders: {} , responseMetaData : responseMetaData
+   , requestMetaData : requestMetaDataClone , error:undefined , isLoading: false}  
         state.nextTabId = String(tabid)
 
     },
@@ -97,7 +104,7 @@ export const tabsSlice = createSlice({
             body: new ReadableStream(), // Create a new ReadableStream object
             bodyUsed: false,
           }
-     , requestMetaData : {} , error:undefined , isLoading: false}}
+     , requestMetaData : requestMetaDataClone , error:undefined , isLoading: false}}
         }
         if (action.payload === state.currTabId) {
           state.currTabId = Object.keys(state.value)[0]
@@ -233,7 +240,7 @@ export const tabsSlice = createSlice({
     state.value[tabid].responseHeaders = headers
    },
 
-   changeMetaData : (state , action: PayloadAction<{ tabid: string , response : ResponseMetadata , request : object }>) => {
+   changeMetaData : (state , action: PayloadAction<{ tabid: string , response : ResponseMetadata , request : RequestMetaData }>) => {
     const { tabid , request , response}  = action.payload
     state.value[tabid].requestMetaData = request
     state.value[tabid].responseMetaData = response

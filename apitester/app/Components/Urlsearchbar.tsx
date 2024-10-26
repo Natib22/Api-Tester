@@ -87,14 +87,14 @@ const headers = currTab.headers
   
   return <div className="w-full  flex items-center mobile:h-10 pc:h-14 bg-lightgrey rounded-xl active:bg-[#2d2b2b]  hover:bg-[#2d2b2b]">
     <div className=" h-full flex items-center dropdown dropdown-bottom mobile:px-1 pc:px-2">
-  <div tabIndex={0} role="button" className="     btn btn-xs h-3/4 w-24 bg-transparent border-none">{currTab?.method} <svg fill="none" xmlns="http://www.w3.org/2000/svg" width="10px" height= "10px" viewBox="0 0 12 12" className="ml-0.5 Icon_icon__QR_ZH Icon_size_xs__Uce_e"><path fillRule="evenodd" clipRule="evenodd" d="M3.841 5.031H8.16c.257 0 .422-.232.3-.424L6.301 1.184c-.129-.204-.473-.204-.602 0L3.541 4.607c-.122.192.043.424.3.424Zm4.318 2H3.84c-.257 0-.422.232-.3.424l2.158 3.424c.129.203.473.203.602 0l2.158-3.424c.122-.192-.043-.424-.3-.424Z" fill="currentColor"></path></svg></div>
+  <div tabIndex={0} role="button" className= {`btn btn-xs h-3/4 w-24 bg-transparent border-none ${currTab.method == "GET" ? ("text-GET"): currTab.method == "PUT" ? "text-PUT" : currTab.method == "PATCH" ? ("text-PATCH"): currTab.method == "DELETE" ? ("text-DELETE"): currTab.method == "HEAD" ? ("text-GET"): currTab.method == "POST" ? ("text-POST"): "" }`}>{currTab?.method} <svg fill="none" xmlns="http://www.w3.org/2000/svg" width="10px" height= "10px" viewBox="0 0 12 12" className="ml-0.5 Icon_icon__QR_ZH Icon_size_xs__Uce_e"><path fillRule="evenodd" clipRule="evenodd" d="M3.841 5.031H8.16c.257 0 .422-.232.3-.424L6.301 1.184c-.129-.204-.473-.204-.602 0L3.541 4.607c-.122.192.043.424.3.424Zm4.318 2H3.84c-.257 0-.422.232-.3.424l2.158 3.424c.129.203.473.203.602 0l2.158-3.424c.122-.192-.043-.424-.3-.424Z" fill="currentColor"></path></svg></div>
   <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-36 p-2 shadow">
-    <li><a onClick={() => {  handleChangeMethod("GET"); }}>GET</a></li>
-    <li><a onClick={() => {  handleChangeMethod("HEAD"); }}>HEAD</a></li>
-    <li><a onClick={() => {  handleChangeMethod("POST"); }}>POST</a></li>
-    <li><a onClick={() => {  handleChangeMethod("PUT"); }}>PUT</a></li>
-    <li><a onClick={() => { handleChangeMethod("PATCH"); }}>PATCH</a></li>
-    <li><a onClick={() => {  handleChangeMethod("DELETE"); }}>DELETE</a></li>
+    <li><a  className = "text-GET" onClick={() => {  handleChangeMethod("GET"); }}>GET</a></li>
+    <li><a className = "text-GET" onClick={() => {  handleChangeMethod("HEAD"); }}>HEAD</a></li>
+    <li><a className = "text-POST" onClick={() => {  handleChangeMethod("POST"); }}>POST</a></li>
+    <li><a className = "text-PUT" onClick={() => {  handleChangeMethod("PUT"); }}>PUT</a></li>
+    <li><a className = "text-PATCH" onClick={() => { handleChangeMethod("PATCH"); }}>PATCH</a></li>
+    <li><a className = "text-DELETE" onClick={() => {  handleChangeMethod("DELETE"); }}>DELETE</a></li>
     
     
   </ul>

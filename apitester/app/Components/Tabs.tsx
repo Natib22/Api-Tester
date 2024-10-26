@@ -30,7 +30,7 @@ const Tabs = () => {
     <div className=' h-9 w-auto my-2  flex items-center overflow-x-auto '>
       <div className='  h-full overflow-scroll flex items-center gap-2'>
       {Object.values(tabs).map((tab, index) => (
-        <div onClick={() => handleChangeTab(tab.tabid)} key = {index} className= {`flex h-full   w-auto max-w-52 p-1  items-center ${currTabId == tab.tabid ? "bg-slate-600" : "bg-[#2d2b2b] "} rounded-lg`}> <span className='text-[8px] ml-1'>{tab.method}</span> <span className='text-xs m-1 overflow-hidden
+        <div onClick={() => handleChangeTab(tab.tabid)} key = {index} className= {`flex h-full   w-auto max-w-52 p-1  items-center ${currTabId == tab.tabid ? "bg-[#343232]" : "bg-lightgrey"} rounded-lg`}> <span className={`text-[8px] ml-1 ${tab.method == "GET" ? ("text-GET"): tab.method == "PUT" ? "text-PUT" : tab.method == "PATCH" ? ("text-PATCH"): tab.method == "DELETE" ? ("text-DELETE"): tab.method == "HEAD" ? ("text-GET"): tab.method == "POST" ? ("text-POST"): "" }`}>{tab.method}</span> <span className='text-xs m-1 overflow-hidden
         '>{tab.title}{tab.tabid}</span> <span  onClick = {(e) => handleRemoveTab(tab.tabid ,e)} className=''><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="m291-240-51-51 189-189-189-189 51-51 189 189 189-189 51 51-189 189 189 189-51 51-189-189-189 189Z"/></svg></span></div>
         
 

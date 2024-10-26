@@ -13,6 +13,12 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
         lightgrey: "#221F1F",
+        "GET": "#73DC8C",
+    POST: "#DBDE52",
+    PUT : "#FFA24E",
+    PATCH : "#FFA24E",
+    DELETE : "#FF6E6E",
+
       },
       screens: {
         mobile: "0px",

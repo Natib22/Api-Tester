@@ -2,78 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '../store'
 
+import Arrayrender from './Arrayrender'
+import Objectrender from './Objectrender'
 
 
 
 const ResponsePanel = () => {
   const [lineNumbers, setLineNumbers] = useState<number[]>([]);
+  const [activeTab, setActiveTab] = useState('');
 
-  const Arrayrender = ({ response }: { response: object[] }) => {
-   
-    // if (Array.isArray(response[0])){
-    //   return <Arrayrender response = {response} />
-    // }
-    // else {
-      return (
-        <>
-          {response.map((item, index) => {
-            const temp = lineNumbers[index];
-           
-          
-            return (
-              <div key={index} className="">
-                <Objectrender key={index} response={item} currLine={temp}  indent={1}/>
-              </div>
-            );
-          })}
-        </>
-      );
-      
-    
-
-    
-  };
-
-  const Objectrender = ({ response , currLine ,indent }: { response: object  , currLine : number , indent: number}) => {
-
-      const size  = Object.keys(response).length
-    
-
-    return (
-      <>
-         <div className='flex justify-between'> <span>{"{"}</span> <p className='text-xs text-gray-400 font-light  text-opacity-40'>{currLine - 1}</p> </div>
-        {Object.entries(response).map(([key, value] , index) => {
-         
-          return (
-            <div key={key} className={`flex justify-between ${
-              indent === 1 ? 'pl-6' : indent === 2 ? 'pl-12' : indent === 3 ? 'pl-18' : 'pl-0'
-            }`} >
-              <div className='flex'>
-                <p className='text-purple-400'>{  '"' + key + '"' }</p> <p className='mx-1'> : </p>
-                
-                <p
-  className={`${
-    value === true || value === false 
-      ? 'text-yellow-400'
-      : !isNaN(parseInt(value)) 
-      ? 'text-blue-400'
-      : 'text-green-400'
-  }`}
->
-  {JSON.stringify(value)}
-</p>
-              </div>
-              <p className='text-xs text-gray-400 font-light  text-opacity-40'>{currLine + index}</p> 
-            </div>
-          );
-        })}
-        <div className='flex justify-between'> <span>{"}"}</span> <p className='text-xs text-gray-400 font-light  text-opacity-40'>{currLine+ 1 + size}</p> </div>
-      </>
-    );
-  };
 
   const tabId = useSelector((state: RootState) => state.tabs.currTabId);
-  const [activeTab, setActiveTab] = useState('');
+  
   const sentStatus = useSelector((state: RootState) => state.tabs.value[tabId].sentStatus);
   const response = useSelector((state: RootState) => state.tabs.value[tabId].response);
   const errorObj = useSelector((state: RootState) => state.tabs.value[tabId].error);
@@ -105,7 +45,7 @@ const ResponsePanel = () => {
   };
 
 
- console.log(responseMetaData.status , "checking the status")
+ 
 
  
 
@@ -121,34 +61,40 @@ const ResponsePanel = () => {
     
   
     }, [response])
+    useEffect(() => {
+      setActiveTab("Response")
+    }, [responseMetaData])
+
+
     
-console.log(errorObj)
+
   return (
     <div className=' flex flex-grow flex-col max-pc:min-h-80 bg-lightgrey max-pc:rounded-lg pc:rounded-tr-lg pc:rounded-br-lg overflow-hidden'>
       <div className='border-b-[0.5px] border-b-slate-600 border-opacity-40 h-12 flex items-center gap-3 px-7'>
-        <button className={`btn btn-sm border-none h-[80%] ${activeTab == "Request" ? "bg-[#323030]" : "bg-transparent"} w-28`}>Request</button>
-        <button className={`btn btn-sm w-auto border-none h-[80%] flex  ${activeTab == "Response" ? "bg-[#323030]" : "bg-transparent"} w-28`}>Response {cloneResponseMetaData.status}<span></span></button>
+        <button onClick = {() => setActiveTab("Request")} className={`btn btn-sm border-none h-[80%] ${activeTab == "Request" ? "bg-[#323030]" : "bg-transparent"} w-auto`}>Request <span className={`${cloneResponseMetaData.status == 200 ? ("text-GET") : cloneResponseMetaData.status == 0 ? ("hidden") :("text-DELETE")}`}> {requestMetaData.method}</span></button>
+        <button onClick = {() => setActiveTab("Response")} className={`btn btn-sm w-auto border-none h-[80%] flex text-sm  ${activeTab == "Response" ? "bg-[#323030]" : "bg-transparent"} w-28`}>Response <span className={`${cloneResponseMetaData.status == 200 ? ("text-GET") : cloneResponseMetaData.status == 0  ? ("hidden") :("text-DELETE")}`}> {cloneResponseMetaData.status} </span>  <span className='text-DELETE'>{errorObj?.status}</span></button>
         
       </div>
 
       {(!errorObj && sentStatus && cloneResponseMetaData.status === 200) ? (
           <>
-<div tabIndex={0} className="collapse collapse-arrow border-base-300 bg-base-200 border w-[90%] my-3">
-<div className="collapse-title text-xl font-medium">Focus me to see content</div>
+          <div className=''></div>
+<div tabIndex={0} className="collapse collapse-arrow  border-base-300 bg-[#323030] border-none  w-[95%] mx-auto my-3  ">
+<div className="collapse-title text-base flex justify-start gap-4 items-center min-h-12 py-0"> <span>HTTP/1.1</span>  <span> {cloneResponseMetaData.status} {cloneResponseMetaData.ok}</span> <span>{Object.keys(cloneResponseMetaData).length} headers</span></div>
 <div className="collapse-content">
 <div> 
           
           { Object.entries(cloneResponseMetaData).map(([key, value]) => {
-            console.log(value);
+       
             return ( <p key={key}>{key} : {JSON.stringify(value)}</p>);
           })} 
         </div>
 </div>
 </div>
-        <div className='pc:overflow-scroll pc:max-h-[75vh] flex flex-col px-6'>
+        <div className='pc:overflow-scroll pc:max-h-[75vh] flex flex-col px-2'>
           
           
-          {Array.isArray(response) ? <Arrayrender response={response} /> : <Objectrender response={response} currLine={0} indent = {1}/>}
+          {Array.isArray(response) ? <Arrayrender response={response} lineNumbers = {lineNumbers}/> : <Objectrender response={response} currLine={0} indent = {3}/>}
         </div>
         </>
       ) : (
