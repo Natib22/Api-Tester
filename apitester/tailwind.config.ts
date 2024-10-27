@@ -9,6 +9,13 @@ const config: Config = {
   ],
   theme: {
     extend: {
+
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-conic":
+          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "custom-gradient": "linear-gradient(0deg, #4640DE, #4640DE), linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2))",
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -18,6 +25,9 @@ const config: Config = {
     PUT : "#FFA24E",
     PATCH : "#FFA24E",
     DELETE : "#FF6E6E",
+    semigray: "#515B6F",
+        verylightpurple: "#D6DDEB",
+        bluepurple: "#4640DE"
 
       },
       screens: {

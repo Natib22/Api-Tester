@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const app = express();
 const User = require('./models/user');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 
 
 const authRoutes = require('./routes/authRoutes');
@@ -15,6 +17,7 @@ const port = process.env.PORT || 5500;
 dotenv.config();
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI ).then ((res) => { app.listen(port, () => {
