@@ -22,6 +22,9 @@ const ResponsePanel = () => {
 
   const requestMetaData = useSelector((state: RootState) => state.tabs.value[tabId].requestMetaData)
 
+  console.log(errorObj)
+console.log(responseMetaData)
+console.log(requestMetaData)
   const cloneResponseMetaData = {
     type: responseMetaData.type,  // e.g., "cors"
     url: responseMetaData.url,  // e.g., "https://jsonplaceholder.typicode.com/todos/1?="
@@ -72,7 +75,7 @@ const ResponsePanel = () => {
     <div className=' flex flex-grow flex-col max-pc:min-h-80 bg-lightgrey max-pc:rounded-lg pc:rounded-tr-lg pc:rounded-br-lg overflow-hidden'>
       <div className='border-b-[0.5px] border-b-slate-600 border-opacity-40 h-12 flex items-center gap-3 px-7'>
         <button onClick = {() => setActiveTab("Request")} className={`btn btn-sm border-none h-[80%] ${activeTab == "Request" ? "bg-[#323030]" : "bg-transparent"} w-auto`}>Request <span className={`${cloneResponseMetaData.status == 200 ? ("text-GET") : cloneResponseMetaData.status == 0 ? ("hidden") :("text-DELETE")}`}> {requestMetaData.method}</span></button>
-        <button onClick = {() => setActiveTab("Response")} className={`btn btn-sm w-auto border-none h-[80%] flex text-sm  ${activeTab == "Response" ? "bg-[#323030]" : "bg-transparent"} w-28`}>Response <span className={`${cloneResponseMetaData.status == 200 ? ("text-GET") : cloneResponseMetaData.status == 0  ? ("hidden") :("text-DELETE")}`}> {cloneResponseMetaData.status} </span>  <span className='text-DELETE'>{errorObj?.status}</span></button>
+        <button onClick = {() => setActiveTab("Response")} className={`btn btn-sm w-auto border-none h-[80%] flex text-sm  ${activeTab == "Response" ? "bg-[#323030]" : "bg-transparent"} w-28`}>Response <span className={`${cloneResponseMetaData.status == 200 ? ("text-GET") : cloneResponseMetaData.status == 0  ? ("hidden") :("text-DELETE")}`}> {errorObj == undefined ?  cloneResponseMetaData.status : ""} </span>  <span className='text-DELETE'>{errorObj?.status}</span></button>
         
       </div>
 
@@ -98,12 +101,18 @@ const ResponsePanel = () => {
         </div>
         </>
       ) : (
-        <div className='m-auto flex flex-col items-center justify-center'>
+        <>
+        <div className='mx-auto my-20 flex flex-col items-center justify-center'>
           <svg xmlns="http://www.w3.org/2000/svg" height="90px" viewBox="0 -960 960 960" width="90px" fill="#666666">
             <path d="m358-316 122-122 122 122 42-42-122-122 122-122-42-42-122 122-122-122-42 42 122 122-122 122 42 42ZM140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm0-60h680v-520H140v520Zm0 0v-520 520Z"/>
           </svg>
           <span className='text-[#666666] text-sm flex flex-col justify-center items-center'> < span>{errorObj?.status}</span>  <span>{errorObj?.error}</span></span>
+          
         </div>
+        {errorObj && <Objectrender response={errorObj} currLine={1} indent = {3}/>}
+        
+        </>
+        
       )}
     </div>
   );
