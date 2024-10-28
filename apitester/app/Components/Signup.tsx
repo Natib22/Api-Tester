@@ -146,7 +146,7 @@ const SignupForm = () => {
             </p>
             <input
               placeholder="Enter your full name"
-              className="w-full h-12 border px-4 py-3 rounded-lg border-verylightpurple"
+              className="w-full h-12 border px-4 py-3 rounded-lg bg-transparent outline-none border-verylightpurple"
               type="text"
               {...register("fullname", {
                 required: "name is required",
@@ -166,7 +166,7 @@ const SignupForm = () => {
               id="email"
               type="email"
               placeholder="Enter email address"
-              className="w-full h-12 border px-4 py-3 rounded-lg border-verylightpurple"
+              className="w-full h-12 border px-4 py-3 rounded-lg bg-transparent outline-none border-verylightpurple"
               {...register("email", {
                 required: "email is required",
                 pattern: {
@@ -187,7 +187,7 @@ const SignupForm = () => {
             </p>
             <input
               placeholder="Enter password"
-              className="w-full h-12 border px-4 py-3 rounded-lg border-verylightpurple"
+              className="w-full h-12 border px-4 py-3 rounded-lg bg-transparent outline-none border-verylightpurple"
               type="password"
               {...register("password", {
                 required: "password is required",
@@ -205,7 +205,7 @@ const SignupForm = () => {
             </p>
             <input
               placeholder="Enter password"
-              className="w-full h-12 border px-4 py-3 rounded-lg border-verylightpurple"
+              className="w-full h-12 border px-4 py-3 rounded-lg bg-transparent outline-none border-verylightpurple"
               type="password"
               {...register("confirmPassword", {
                 required: "password is required",

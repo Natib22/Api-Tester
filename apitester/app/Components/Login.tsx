@@ -10,6 +10,7 @@ interface FormData {
 }
 
 const LoginForm = () => {
+    const[backerror , setBackerror] = React.useState({password: "" , email:"" })
   const router = useRouter();
   const gotosignup = () => {
     router.push("/auth/signup");
@@ -18,7 +19,7 @@ const LoginForm = () => {
   const { errors } = formState;
 
   const login = async (data: FormData) => {
-    console.log( data ," from login.tsx)")
+
     const result = await signIn("credentials", {
       redirect: false,
       email: data.email,
@@ -26,17 +27,20 @@ const LoginForm = () => {
     });
 
     if (result?.ok) {
-      console.log("login success");
-      console.log(result);
       router.push("/");
     } else {
-      // Handle errors here (e.g., show a notification)
-      console.error(result);
+       if (result?.error === "incorrect email"){
+        setBackerror({password: "", email: "incorrect email"})
+       }
+         if (result?.error === "incorrect password"){
+          setBackerror({password: "incorrect password", email: ""})
+         }
+    
     }
   };
 
   return (
-    <div className="w-[408px] relative mt-[141px] h-auto flex gap-6 flex-col">
+    <div className="pc:w-1/3 max-pc:w-1/2 max-tablet:w-5/6 relative mt-[141px] h-auto flex gap-6 flex-col">
       <h1 className="font-black text-[32px] text-center">Welcome Back,</h1>
       <svg
         width="408"
@@ -64,7 +68,7 @@ const LoginForm = () => {
             id="email"
             type="email"
             placeholder="Enter email address"
-            className="w-full h-12 border px-4 py-3 rounded-lg border-verylightpurple"
+            className="w-full h-12 border px-4 py-3 rounded-lg bg-transparent outline-none border-verylightpurple"
             {...register("email", {
               required: "email is required",
               pattern: {
@@ -75,6 +79,7 @@ const LoginForm = () => {
           />
           <p className="mx-4 text-xs text-red-500">
             {errors.email ? "*" + errors.email.message : ""}
+            {backerror.email ? backerror.email : ""}
           </p>
         </div>
 
@@ -84,7 +89,7 @@ const LoginForm = () => {
           </p>
           <input
             placeholder="Enter password"
-            className="w-full h-12 border px-4 py-3 rounded-lg border-verylightpurple"
+            className="w-full h-12 border px-4 py-3 rounded-lg bg-transparent outline-none border-verylightpurple"
             type="password"
             {...register("password", {
               required: "password is required",
@@ -92,6 +97,7 @@ const LoginForm = () => {
           />
           <p className="mx-4 text-xs text-red-500">
             {errors.password ? "*" + errors.password.message : ""}
+            {backerror.password ? backerror.password : ""}
           </p>
         </div>
         <button

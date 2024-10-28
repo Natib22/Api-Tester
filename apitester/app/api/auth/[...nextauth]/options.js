@@ -30,9 +30,13 @@ export const options = {
   
           // If no user or error, return null
           if (!res.ok || !user) {
-            return null;
+            throw new Error(user?.err.password|| user.err.email || "An error occurred");
+
+
+
           }
           
+
         
           
           return user
