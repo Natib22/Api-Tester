@@ -15,6 +15,7 @@ interface FormData {
 const SignupForm = () => {
   const { register, handleSubmit, formState } = useForm<FormData>();
   const { errors } = formState;
+  const[backerror , setBackerror] = React.useState({password: "" , email:"" })
 //   const router = useRouter();
 
 //   const gotologin = () => {
@@ -26,19 +27,27 @@ const SignupForm = () => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/signup`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+            "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          fullname: data.fullname,
-          email: data.email,
-          password: data.password,
-         
+            fullname: data.fullname,
+            email: data.email,
+            password: data.password,
         }),
-      });
+        credentials: "include", // Include credentials (cookies)
+    });
 
       if (!response.ok) {
         const errorData = await response.json();
         console.log(errorData)
+          
+          if (errorData.err.password){
+            setBackerror({password: errorData.err.password, email: ""})
+          }
+          if (errorData.err.email){
+            setBackerror({password: "", email: errorData.err.email})
+          }
+        
         throw new Error(errorData.message || "Something went wrong");
       }
 
@@ -168,6 +177,7 @@ const SignupForm = () => {
             />
             <p className="mx-4 text-xs text-red-500">
               {errors.email ? "*" + errors.email.message : ""}
+              {backerror.email ? backerror.email : ""}
             </p>
           </div>
 
@@ -185,6 +195,7 @@ const SignupForm = () => {
             />
             <p className="mx-4 text-xs text-red-500">
               {errors.password ? "*" + errors.password.message : ""}
+              {backerror.password ?  "*"  + backerror.password : ""}
             </p>
           </div>
 
