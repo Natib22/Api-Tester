@@ -4,27 +4,15 @@
 
 # API Tester
 
-API Tester is an API testing tool built with Next.js, MongoDB, Express, and JWT authentication. This project allows users to securely test API endpoints with protected routes using JSON Web Token (JWT) authentication. The application is structured in two parts: a Next.js frontend and an Express.js backend that connects to a MongoDB database.
+Built a high-speed API testing tool using the Model-View-Controller (MVC) pattern. This project allows users to securely test API endpoints, with support for multiple request types and JWT-based authorization. It is designed to offer faster response times and greater ease of use compared to other tools, with the app having tested over 100 endpoints.
 
-## Table of Contents
+## Core Features
 
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Installation](#installation)
-- [Environment Variables](#environment-variables)
-- [Usage](#usage)
-- [Folder Structure](#folder-structure)
-- [Scripts](#scripts)
-- [License](#license)
-
-## Features
-
-- **API Testing Tool**: Create, test, and document API endpoints.
-- **JWT Authentication**: Secure endpoints with JSON Web Token.
-- **MongoDB Integration**: Store user information, tokens, and other data in a MongoDB database.
-- **Redux for State Management**: Manage application state seamlessly with Redux.
-- **React Hook Form**: Handle forms easily on the frontend with validations.
-- **Styled with Tailwind CSS and DaisyUI**: Clean and responsive UI with Tailwind CSS and DaisyUI.
+- **Request Types**: Supports multiple request methods, including GET, POST, PUT, DELETE, etc.
+- **Headers and Authorization**: Includes support for custom headers and JWT authentication.
+- **Endpoint History**: Saves and retrieves previously tested endpoints, making it easy to re-test and monitor requests.
+- **MVC Architecture**: Built with the Model-View-Controller (MVC) pattern for modularity and maintainability.
+- **High-Speed Performance**: Optimized for faster response times and ease of use compared to traditional API testing tools.
 
 ## Tech Stack
 
