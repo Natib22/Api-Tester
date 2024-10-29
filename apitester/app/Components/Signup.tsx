@@ -1,7 +1,9 @@
 "use client";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
-// import { useRouter } from "next/navigation";
+
 // import { signIn } from "next-auth/react";
 // import Google from "next-auth/providers/google";
 
@@ -16,11 +18,11 @@ const SignupForm = () => {
   const { register, handleSubmit, formState } = useForm<FormData>();
   const { errors } = formState;
   const[backerror , setBackerror] = React.useState({password: "" , email:"" })
-//   const router = useRouter();
+  const router = useRouter()
 
-//   const gotologin = () => {
-//     router.push("/auth/login");
-//   };
+  const gotologin = () => {
+    router.push("/auth/login");
+  };
 
   const signup = async (data: FormData) => {
     try {
@@ -51,8 +53,14 @@ const SignupForm = () => {
         throw new Error(errorData.message || "Something went wrong");
       }
 
-      const result = await response.json();
-        console.log("Signup result:", result);
+      await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
+
+      // const result = await response.json();
+        router.push("/")
       // Handle successful signup here (e.g., redirect to login or home page)
     } catch (error) {
       console.error("Signup error:", error);
