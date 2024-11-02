@@ -17,7 +17,7 @@ const port = process.env.PORT || 5500;
 dotenv.config();
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:3000', // Specify the exact origin
+  origin: 'http://localhost:3000', // Specify the exact origin and configure to allow others
   credentials: true, // Allow credentials (cookies)
 }));
 
