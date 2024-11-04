@@ -18,13 +18,13 @@ const ResponsePanel = () => {
   const response = useSelector((state: RootState) => state.tabs.value[tabId].response);
   const errorObj = useSelector((state: RootState) => state.tabs.value[tabId].error);
   const responseMetaData = useSelector((state: RootState) => state.tabs.value[tabId].responseMetaData);
+  const bodyError = useSelector((state: RootState) => state.tabs.value[tabId].bodyError);
 
 
   const requestMetaData = useSelector((state: RootState) => state.tabs.value[tabId].requestMetaData)
 
-  console.log(errorObj)
-console.log(responseMetaData)
-console.log(requestMetaData)
+  
+
   const cloneResponseMetaData = {
     type: responseMetaData.type,  // e.g., "cors"
     url: responseMetaData.url,  // e.g., "https://jsonplaceholder.typicode.com/todos/1?="
@@ -64,13 +64,14 @@ console.log(requestMetaData)
     
   
     }, [response])
+
     useEffect(() => {
       setActiveTab("Response")
     }, [responseMetaData])
 
 
     
-
+   console.log( response)
   return (
     <div className=' flex flex-grow flex-col max-pc:min-h-80 bg-lightgrey max-pc:rounded-lg pc:rounded-tr-lg pc:rounded-br-lg overflow-hidden'>
       <div className='border-b-[0.5px] border-b-slate-600 border-opacity-40 h-12 flex items-center gap-3 px-7'>
@@ -101,6 +102,7 @@ console.log(requestMetaData)
         </div>
         </>
       ) : (
+        bodyError ? bodyError  : (
         <>
         <div className='mx-auto my-20 flex flex-col items-center justify-center'>
           <svg xmlns="http://www.w3.org/2000/svg" height="90px" viewBox="0 -960 960 960" width="90px" fill="#666666">
@@ -113,6 +115,7 @@ console.log(requestMetaData)
         
         </>
         
+      )
       )}
     </div>
   );

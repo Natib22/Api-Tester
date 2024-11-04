@@ -18,7 +18,9 @@ export interface tabState {
   responseMetaData : ResponseMetadata
   requestMetaData : RequestMetaData
   error : FetchBaseQueryError | SerializedError | undefined
-  isLoading : boolean
+  isLoading : boolean,
+  body : string
+  bodyError : string
 
 
 }
@@ -63,7 +65,7 @@ const requestMetaDataClone: RequestMetaData = {
 
 const initialState: TabsState = {
     value:{
-       "0" : {tabid: "0", title: "untitled", url: ""  , method: "GET" , params: [["" , ""]] , headers :[["",""]] , sentStatus: false , response: [] , responseHeaders: {}  , responseMetaData : responseMetaData , requestMetaData : requestMetaDataClone , error : undefined , isLoading : false},
+       "0" : {tabid: "0", title: "untitled", url: ""  , method: "GET" , params: [["" , ""]] , headers :[["",""]] , sentStatus: false , response: [] , responseHeaders: {}  , responseMetaData : responseMetaData , requestMetaData : requestMetaDataClone , error : undefined , isLoading : false , body : '' , bodyError : ''},
 
     },
 
@@ -79,7 +81,7 @@ export const tabsSlice = createSlice({
     addTab : (state) => {
          const tabid: number = Number(state.nextTabId) + 1
 
-        state.value[String(tabid)] = {tabid: String(tabid), title: "untitled", url: "", method: "GET" , params: [["", ""]] , headers :[["", ""]] , sentStatus: false , response: [] , responseHeaders: {} , responseMetaData : responseMetaData
+        state.value[String(tabid)] = {tabid: String(tabid), title: "untitled", url: "", method: "GET" , body : '' , bodyError : '' ,  params: [["", ""]] , headers :[["", ""]] , sentStatus: false , response: [] , responseHeaders: {} , responseMetaData : responseMetaData
    , requestMetaData : requestMetaDataClone , error:undefined , isLoading: false}  
         state.nextTabId = String(tabid)
 
@@ -93,7 +95,7 @@ export const tabsSlice = createSlice({
 
         }
         else {
-          state.value = {["0"] : {tabid: "0", title: "untitled", url: "", method: "GET" , params: [["", ""]] , headers :[["", ""]] , sentStatus: false , response: [] , responseHeaders:{} ,responseMetaData : {
+          state.value = {["0"] : {tabid: "0", title: "untitled", url: "", method: "GET" ,body : '' ,bodyError : '' ,  params: [["", ""]] , headers :[["", ""]] , sentStatus: false , response: [] , responseHeaders:{} ,responseMetaData : {
             type: "",
             url: "",
             redirected: false,
@@ -263,12 +265,20 @@ export const tabsSlice = createSlice({
       // state.value[tabid].responseMetaData.status = 404;
     
    },
+   changeBody : (state , action: PayloadAction<{ tabid: string , body: string }>) => {  
+    const { tabid , body} = action.payload
+    state.value[tabid].body = body
+   },
+   changeBodyError : (state , action: PayloadAction<{ tabid: string , error: string }>) => {
+    const { tabid , error} = action.payload
+    state.value[tabid].bodyError = error
+   },
 
 
 }
 })
 
 // Action creators are generated for each case reducer function
-export const { addTab , removeTab , changeUrl , changeMethod , changeParams , changeHeaders , changeActiveTabs , changeResponse , changeResponseStatus , changeResponseHeaders , changeMetaData , changeError , changeLoadingStatus} = tabsSlice.actions
+export const { changeBodyError ,  changeBody , addTab , removeTab , changeUrl , changeMethod , changeParams , changeHeaders , changeActiveTabs , changeResponse , changeResponseStatus , changeResponseHeaders , changeMetaData , changeError , changeLoadingStatus} = tabsSlice.actions
 
 export default tabsSlice.reducer

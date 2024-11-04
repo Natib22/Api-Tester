@@ -1,6 +1,7 @@
 "use client"
 import React from 'react'
-
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import Tabs from './Components/Tabs'
 import Urlsearchbar from './Components/Urlsearchbar'
 import Panel from './Components/Panel'
@@ -8,6 +9,20 @@ import Panel from './Components/Panel'
 
 const Homepage
  = () => {
+  const router = useRouter()
+  const { data: session, status } = useSession()
+  if (status === 'loading') {
+    return <p>Loading...</p>
+  }
+  if (!session) {
+    
+    
+    router.push('/auth/login')
+  }
+  
+
+
+    
   
   
   

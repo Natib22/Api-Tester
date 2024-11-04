@@ -1,10 +1,10 @@
 "use client"
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { RootState } from '../store'
 import { useDispatch, useSelector } from "react-redux";
-import { changeUrl , changeMethod , changeResponse , changeResponseStatus , changeResponseHeaders , changeMetaData , changeError  , changeLoadingStatus} from "../features/tabs/tabsSlice";
-import { useLazyFetchDataFromUrlQuery } from "../features/apis/apisSlice";
+import {changeBodyError ,  changeUrl , changeMethod , changeResponse , changeResponseStatus , changeResponseHeaders , changeMetaData , changeError  , changeLoadingStatus} from "../features/tabs/tabsSlice";
+import { useLazyFetchDataFromUrlQuery , useDeleteDataFromUrlMutation , usePostDataToUrlMutation } from "../features/apis/apisSlice";
 
 
  
@@ -13,10 +13,13 @@ import { useLazyFetchDataFromUrlQuery } from "../features/apis/apisSlice";
 const Urlsearchbar = ()=> {
   const currTabId = useSelector( (state : RootState) => state.tabs.currTabId)
   const tabs = useSelector((state : RootState) => state.tabs.value)
+  const [flag , setFlag] = useState(false)
   // Assuming currTabId is defined and tabs is an array of tab objects
   const  currTab = tabs[currTabId];
 
-  const [fetchData, { data  ,  error, isLoading}] = useLazyFetchDataFromUrlQuery();
+  const [fetchData, { data:fetchedData  ,  error :fetchError, isLoading: isFetching}] = useLazyFetchDataFromUrlQuery();
+  const [deleteData , {data:deletedData , isLoading: isDeleting , error :deleteError}] = useDeleteDataFromUrlMutation();
+  const [postData , {data:postedData , isLoading: isPosting , error: postError}] = usePostDataToUrlMutation();
   
 
  
@@ -37,52 +40,120 @@ const Urlsearchbar = ()=> {
   
    
 
-  const handleSubmission = () => {
-    const queryString = currTab.params ? '?' + new URLSearchParams(currTab.params).toString() : '';
+  const handleSubmission =  () => {
+    if (currTab.method === "GET"){
+
+      const queryString = currTab.params ? '?' + new URLSearchParams(currTab.params).toString() : '';
     // Assuming currTab.headers is an array of header entries (key-value pairs)
-const headers = currTab.headers
-? Object.fromEntries(
-    Array.from(currTab.headers).filter(([key, value]) => key && value) // Filter out empty keys and values
-  )
-: {};
+      const headers = currTab.headers ? Object.fromEntries(
+                        Array.from(currTab.headers).filter(([key, value]) => key && value) // Filter out empty keys and values
+                      )
+                    : {};
+
+      fetchData({url: currTab?.url , params: queryString , headers: headers}) 
+      console.log("clicked get") 
+    }
+
+    if (currTab.method === "DELETE"){
+      const queryString = currTab.params ? '?' + new URLSearchParams(currTab.params).toString() : '';
+    // Assuming currTab.headers is an array of header entries (key-value pairs)
+      const headers = currTab.headers ? Object.fromEntries(
+                        Array.from(currTab.headers).filter(([key, value]) => key && value) // Filter out empty keys and values
+                      )
+                    : {};
+
+      deleteData({url: currTab?.url , params: queryString , headers: headers})  
+    }
 
 
+    if (currTab.method === "POST"){
+      const body = currTab.body;
+      try {
+        const parsedBody = JSON.parse(body);
+        if (typeof parsedBody !== 'object' || parsedBody === null) {
+          throw new Error('Input must be a valid object');
+        }
+      }
+        catch (err) {
+          dispatch(changeBodyError({tabid: String(currTabId) , error: (err as Error).message || "Something went wrong"}))
+        
 
-    fetchData({url: currTab?.url , params: queryString , headers: headers})
-    
+      }
+
+      
+
+   
+
+      const headers = currTab.headers ? Object.fromEntries(
+                        Array.from(currTab.headers).filter(([key, value]) => key && value) // Filter out empty keys and values
+                      )
+                    : {};
+      postData({url: currTab?.url , body: body , headers: headers}) 
+      console.log("posting")
+       
+    }
+
+    setFlag(!flag)
+        
     
 
   }
 
 
   useEffect(() => {
-    if (data) {
+
+    if (fetchedData) {
       
-      dispatch(changeResponse({tabid: currTabId , response: data.data}))  
+      dispatch(changeResponse({tabid: currTabId , response: fetchedData.data}))  
       dispatch(changeResponseStatus({tabid: String(currTabId) , status: true}))
-      dispatch(changeResponseHeaders({tabid : currTabId , headers: data.headers || {}}))
+      dispatch(changeResponseHeaders({tabid : currTabId , headers: fetchedData.headers || {}}))
       // const temp: Record<string, unknown> = data.metadata || {};
       // temp["response"] = data.response;
       // temp["request"] = data.request;
       
-      dispatch(changeMetaData({tabid: String(currTabId) , request: data.request|| {} , response : data.response || {}}))
-      
-      
-
+      dispatch(changeMetaData({tabid: String(currTabId) , request: fetchedData.request|| {} , response : fetchedData.response || {}}))
     }
-    if (error) {
-      dispatch(changeError({tabid: String(currTabId) , error: error}))
+    if (deletedData && currTab.method === "DELETE") {
+      console.log(deletedData)
+      dispatch(changeResponse({tabid: currTabId , response: [deletedData]}))  
+      dispatch(changeResponseStatus({tabid: String(currTabId) , status: true}))
+      dispatch(changeResponseHeaders({tabid : currTabId , headers: deletedData.headers || {}}))
+
+      
+      dispatch(changeMetaData({tabid: String(currTabId) , request: deletedData.request|| {} , response : deletedData.response || {}}))
+    }
+    if (postedData && currTab.method === "POST") {
+      dispatch(changeResponse({tabid: currTabId , response: [postedData]}))  
+      dispatch(changeResponseStatus({tabid: String(currTabId) , status: true}))
+      dispatch(changeResponseHeaders({tabid : currTabId , headers: postedData.headers || {}}))
+
+      
+      dispatch(changeMetaData({tabid: String(currTabId) , request: postedData.request|| {} , response : postedData.response || {}}))
+      dispatch(changeBodyError({tabid: String(currTabId) , error: ""}))
+      console.log(Response)
+    }
+
+    if (fetchError) {
+      dispatch(changeError({tabid: String(currTabId) , error: fetchError}))
      
       
     }
-    if (isLoading) {
+    if (deleteError) {
+      dispatch(changeError({tabid: String(currTabId) , error: deleteError}))
+      
+    }
+    if (postError) {
+      dispatch(changeError({tabid: String(currTabId) , error: postError}))
+      
+    }
+    if (isFetching) {
       dispatch(changeLoadingStatus({tabid: String(currTabId) , status: false}))
     }
       
       
-  } , [data ,error ,isLoading ,   dispatch])
+  } , [fetchedData , deletedData , postedData , fetchError , deleteError , postError ,isFetching , isDeleting ,isPosting,   dispatch , flag ])
   
-    
+    console.log(isFetching , "fetching" , isDeleting , "deleting" , isPosting , "posting")
  
   
   return <div className="w-full  flex items-center mobile:h-10 pc:h-14 bg-lightgrey rounded-xl active:bg-[#2d2b2b]  hover:bg-[#2d2b2b]">

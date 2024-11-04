@@ -1,9 +1,10 @@
 "use client"
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../store'
 import { changeParams , changeHeaders } from '../features/tabs/tabsSlice'
+import Body from './Body'
 
 
 
@@ -16,17 +17,7 @@ const RequestPanel = () => {
  const params = useSelector((state: RootState) => state.tabs.value[tabId].params || [["", ""]])
  const headers = useSelector((state:RootState) => state.tabs.value[tabId].headers || [["", ""]]) 
 
- useEffect (() => {
 
- })
-
-
- useEffect(() => {
-
-  console.log(params)
-
-
- },[params])
 
 
      
@@ -123,6 +114,16 @@ const RequestPanel = () => {
           
           
         </div>
+
+        <div
+        id  = "body-panel"
+        role="tabpanel"
+        aria-labelledby="tab-3"
+        hidden={activeTab !== 'Body'}>
+          <Body  />
+
+        </div>
+
         
       </div>
 
