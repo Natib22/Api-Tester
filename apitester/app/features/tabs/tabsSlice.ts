@@ -5,6 +5,7 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 
 
+
 export interface tabState {
   tabid: string;
   title: string;
@@ -65,7 +66,7 @@ const requestMetaDataClone: RequestMetaData = {
 
 const initialState: TabsState = {
     value:{
-       "0" : {tabid: "0", title: "untitled", url: ""  , method: "GET" , params: [["" , ""]] , headers :[["",""]] , sentStatus: false , response: [] , responseHeaders: {}  , responseMetaData : responseMetaData , requestMetaData : requestMetaDataClone , error : undefined , isLoading : false , body : '' , bodyError : ''},
+       "0" : {tabid: "0", title: "untitled", url: ""  , method: "GET" , params: [["" , ""]] , headers :[["",""]] , sentStatus: false , response: [] , responseHeaders: {}  , responseMetaData : responseMetaData , requestMetaData : requestMetaDataClone , error : undefined , isLoading : false , body : '{}' , bodyError : ''},
 
     },
 
@@ -81,10 +82,17 @@ export const tabsSlice = createSlice({
     addTab : (state) => {
          const tabid: number = Number(state.nextTabId) + 1
 
-        state.value[String(tabid)] = {tabid: String(tabid), title: "untitled", url: "", method: "GET" , body : '' , bodyError : '' ,  params: [["", ""]] , headers :[["", ""]] , sentStatus: false , response: [] , responseHeaders: {} , responseMetaData : responseMetaData
+        state.value[String(tabid)] = {tabid: String(tabid), title: "untitled", url: "", method: "GET" , body : '{ }' , bodyError : '' ,  params: [["", ""]] , headers :[["", ""]] , sentStatus: false , response: [] , responseHeaders: {} , responseMetaData : responseMetaData
    , requestMetaData : requestMetaDataClone , error:undefined , isLoading: false}  
         state.nextTabId = String(tabid)
 
+    },
+    saveTabs : (state) => {
+      
+      console.log("tabs saved")
+      console.log(state.value)
+      console.log(state.currTabId)
+      console.log(state.nextTabId)
     },
 
    
@@ -279,6 +287,6 @@ export const tabsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { changeBodyError ,  changeBody , addTab , removeTab , changeUrl , changeMethod , changeParams , changeHeaders , changeActiveTabs , changeResponse , changeResponseStatus , changeResponseHeaders , changeMetaData , changeError , changeLoadingStatus} = tabsSlice.actions
+export const { changeBodyError ,  changeBody , addTab,saveTabs , removeTab , changeUrl , changeMethod , changeParams , changeHeaders , changeActiveTabs , changeResponse , changeResponseStatus , changeResponseHeaders , changeMetaData , changeError , changeLoadingStatus} = tabsSlice.actions
 
 export default tabsSlice.reducer

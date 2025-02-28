@@ -153,7 +153,7 @@ const Urlsearchbar = ()=> {
       
   } , [fetchedData , deletedData , postedData , fetchError , deleteError , postError ,isFetching , isDeleting ,isPosting,   dispatch , flag ])
   
-    console.log(isFetching , "fetching" , isDeleting , "deleting" , isPosting , "posting")
+    
  
   
   return <div className="w-full  flex items-center mobile:h-10 pc:h-14 bg-lightgrey rounded-xl active:bg-[#2d2b2b]  hover:bg-[#2d2b2b]">
@@ -175,7 +175,7 @@ const Urlsearchbar = ()=> {
 <p>{currTabId}</p>
 <div className="h-full flex mx-2 items-center justify-between gap-3">
 <button  onClick = {handleSubmission} className="btn-xs h-2/3 pc:w-16 mobile:w-8 bg-green-500 max-pc:hidden rounded-md text-neutral-200"> send</button>
-<button className="btn-xs h-2/3 pc:w-16 mobile:w-8 bg-green-500  pc:hidden rounded-lg"> <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+<button onClick = {handleSubmission} className="btn-xs h-2/3 pc:w-16 mobile:w-8 bg-green-500  pc:hidden rounded-lg"> <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
  width="100%" height="100%" viewBox="0 0 96.000000 96.000000"
  preserveAspectRatio="xMidYMid meet">
 

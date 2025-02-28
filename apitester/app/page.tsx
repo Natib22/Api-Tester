@@ -1,24 +1,32 @@
 "use client"
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Tabs from './Components/Tabs'
 import Urlsearchbar from './Components/Urlsearchbar'
 import Panel from './Components/Panel'
-
+import Image from 'next/image'
 
 const Homepage
  = () => {
   const router = useRouter()
   const { data: session, status } = useSession()
+  useEffect(() => {
+    // Redirect to login if no session is found
+    if (status !== 'loading' && !session) {
+      router.push('/auth/login')
+    }
+  }, [status, session, router])
+
   if (status === 'loading') {
     return <p>Loading...</p>
   }
-  if (!session) {
-    
-    
-    router.push('/auth/login')
+  if (status == 'authenticated') {
+    console.log('authenticated')
+    console.log(session)
   }
+
+
   
 
 
@@ -30,7 +38,7 @@ const Homepage
     <div className='h-full w-full flex '>
       <div className='h-screen sticky top-0 w-14 max-tablet:w-[12%]'>
         <span className='w-full flex items-center justify-center'>
-        <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" width="40px " height="40px"><polygon fill="#43a047" points="43,35.112 43,13.336 24,2.447 5,13.336 5,35.112 24,46"/><path fill="#fff" d="M32.5,13c-1.381,0-2.5,1.119-2.5,2.5v11.276L18.984,14.453l-0.131-0.152 C17.609,12.938,16.187,13,15.5,13c-1.381,0-2.5,1.119-2.5,2.5v17c0,1.381,1.119,2.5,2.5,2.5s2.5-1.119,2.5-2.5V21.141 l11.278,12.627l0.11,0.142C30.62,35.133,32.295,35,32.5,35c1.381,0,2.5-1.119,2.5-2.5v-17C35,14.119,33.881,13,32.5,13z"/></svg>
+        <Image src="/logo.gif" alt="Loading" width={50} height={50} unoptimized />
         </span>
       
 

@@ -6,7 +6,7 @@ export const options = {
   // Configure one or more authentication providers
   providers : [
     CredentialsProvider({
-        name: "credentials",
+        name: "Login",
         credentials: {
           email: { label: "Email", type: "email" },
           password: { label: "Password", type: "password" },
@@ -26,7 +26,7 @@ export const options = {
           });
   
           const user = await res.json();
-          console.log("User: from the authorize body", user);
+   
   
           // If no user or error, return null
           if (!res.ok || !user) {

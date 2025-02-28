@@ -1,4 +1,5 @@
 "use client";
+
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -28,39 +29,41 @@ const SignupForm = () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/signup`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            fullname: data.fullname,
-            email: data.email,
-            password: data.password,
+          email: data?.email,
+          password: data?.password,
+          fullname: data?.fullname
         }),
-        credentials: "include", // Include credentials (cookies)
-    });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.log(errorData)
-          
-          if (errorData.err.password){
-            setBackerror({password: errorData.err.password, email: ""})
-          }
-          if (errorData.err.email){
-            setBackerror({password: "", email: errorData.err.email})
-          }
-        
-        throw new Error(errorData.message || "Something went wrong");
-      }
-
-      await signIn("credentials", {
-        redirect: false,
-        email: data.email,
-        password: data.password,
+        credentials: "include",
       });
 
-      // const result = await response.json();
-        router.push("/")
+     
+
+          if (!response.ok) {
+            const errorObj = await response.json();
+            setBackerror({ password: errorObj.err.password, email: errorObj.err.email });
+            console.log(errorObj);
+          } else {
+            alert("Signup successful!");
+            const signInResponse = await signIn("credentials", {
+              redirect: false,
+              email: data.email,
+              password: data.password,
+              callbackUrl: "/",
+            });
+      
+            // Check if sign-in was successful and redirect to the provided callbackUrl
+            if (signInResponse?.url) {
+              router.push(signInResponse.url); // Redirect to home page or custom URL
+            } else {
+              // Optionally handle error if sign-in fails
+              console.error("Sign-in failed");
+            }
+  
+          }
+
+      
       // Handle successful signup here (e.g., redirect to login or home page)
     } catch (error) {
       console.error("Signup error:", error);

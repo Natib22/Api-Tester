@@ -30,7 +30,7 @@ mongoose.connect(process.env.MONGO_URI ).then ((res) => { app.listen(port, () =>
 
 // Routes
 app.get('/',  (req, res) => {
-   
+   console.log("here")
    
     res.cookie("check" , "from server")
     res.json({ message: 'Hello World' , here : "myval" });
