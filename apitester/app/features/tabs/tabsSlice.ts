@@ -4,8 +4,49 @@ import { ResponseMetadata , RequestMetaData } from './tabsInterface';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 
-
-
+export const prepareStateForMongoDB = (state: TabsState) => {
+  return {
+    ...state,
+    value: Object.fromEntries(
+      Object.entries(state.value).map(([key, tab]) => [
+        key,
+        {
+          ...tab,
+          responseMetaData: {
+            ...tab.responseMetaData,
+            // Manually set each responseMetaData field
+            type: tab.responseMetaData.type || "",
+            url: tab.responseMetaData.url || "",
+            redirected: tab.responseMetaData.redirected || false,
+            status: tab.responseMetaData.status || 0,
+            ok: tab.responseMetaData.ok || false,
+            statusText: tab.responseMetaData.statusText || "",
+            headers: Object.fromEntries(tab.responseMetaData.headers.entries()), // Convert Headers
+            body: null, // Remove ReadableStream (can't be serialized)
+            bodyUsed: tab.responseMetaData.bodyUsed || false,
+          },
+          requestMetaData: {
+            ...tab.requestMetaData,
+            // Manually set each requestMetaData field
+            method: tab.requestMetaData.method || "",
+            url: tab.requestMetaData.url || "",
+            headers: Object.fromEntries(tab.requestMetaData.headers.entries()), // Convert Headers
+            destination: tab.requestMetaData.destination || "",
+            referrer: tab.requestMetaData.referrer || "",
+            referrerPolicy: tab.requestMetaData.referrerPolicy || "",
+            mode: tab.requestMetaData.mode || "cors",
+            credentials: tab.requestMetaData.credentials || "same-origin",
+            cache: tab.requestMetaData.cache || "default",
+            redirect: tab.requestMetaData.redirect || "follow",
+            integrity: tab.requestMetaData.integrity || "",
+            signal: undefined, // AbortSignal cannot be serialized
+            bodyUsed: tab.requestMetaData.bodyUsed || false,
+          },
+        },
+      ])
+    ),
+  };
+};
 export interface tabState {
   tabid: string;
   title: string;
@@ -22,7 +63,6 @@ export interface tabState {
   isLoading : boolean,
   body : string
   bodyError : string
-
 
 }
 
@@ -87,12 +127,18 @@ export const tabsSlice = createSlice({
         state.nextTabId = String(tabid)
 
     },
-    saveTabs : (state) => {
+    saveTabs: (state) => {
       
-      console.log("tabs saved")
-      console.log(state.value)
-      console.log(state.currTabId)
-      console.log(state.nextTabId)
+     
+      const temp = prepareStateForMongoDB(state)
+      console.log(temp.value["0"].responseMetaData)
+      
+
+      console.log(state.value["0"].responseMetaData)
+      console.log("second")
+      console.log(JSON.stringify(state))
+      console.log(temp)
+      
     },
 
    

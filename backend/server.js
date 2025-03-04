@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 
 
 const authRoutes = require('./routes/authRoutes');
+const tabsRoutes = require('./routes/tabsRoutes');
 
 
 const port = process.env.PORT || 5500;
@@ -37,6 +38,7 @@ app.get('/',  (req, res) => {
 });
 
 app.use(authRoutes)
+app.use(tabsRoutes)
 
 
  

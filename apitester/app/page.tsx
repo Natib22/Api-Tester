@@ -7,16 +7,20 @@ import Urlsearchbar from './Components/Urlsearchbar'
 import Panel from './Components/Panel'
 import Image from 'next/image'
 
+
 const Homepage
  = () => {
   const router = useRouter()
   const { data: session, status } = useSession()
+  
+
   useEffect(() => {
     // Redirect to login if no session is found
     if (status !== 'loading' && !session) {
       router.push('/auth/login')
     }
   }, [status, session, router])
+
 
   if (status === 'loading') {
     return <p>Loading...</p>
@@ -25,8 +29,6 @@ const Homepage
     console.log('authenticated')
     console.log(session)
   }
-
-
   
 
 
